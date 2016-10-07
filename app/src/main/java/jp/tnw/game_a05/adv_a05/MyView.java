@@ -37,7 +37,7 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
 
     //◆インスタンス実体化
     ADVBackground BG = new ADVBackground();
-    ADVMessage Message = new ADVMessage();
+    ADVMessage Message = new ADVMessage(new ADVMessage_Data());
     Enter Arrow = new Enter();
 
     //---------------------------
@@ -69,7 +69,8 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
         synchronized (mLock) {//メイン処理とｲﾍﾞﾝﾄの同期
             //My += FrameTime * 100;
             Message.newText(Message.data.Bun_01[cnt]);
-            busy = Message.update();
+            //busy = Message.update();
+            Message.update2();
             if (!busy)
                 Arrow.update();
 
@@ -122,6 +123,9 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
             */
             c.drawText("X= " + screenWidth, (int) ((960 - 28 * 6) * Xx), (int) (28 * 2 * Yy), p);
             c.drawText("Y= " + screenHeight, (int) ((960 - 28 * 6) * Xx), (int) (28 * 3 * Yy), p);
+
+            Message.drawImage2(c,Xx,Yy);
+
             /*c.drawText("tchCnt= " + cnt, (int) ((960 - 28 * 6) * Xx), (int) (28 * 4 * Yy), p);
             c.drawText("typeCnt= " + Message.cnt, (int) ((960 - 28 * 6) * Xx), (int) (28 * 5 * Yy), p);
             c.drawText("timer= " + (int)Message.timer, (int) ((960 - 28 * 6) * Xx), (int) (28 * 6 * Yy), p);
