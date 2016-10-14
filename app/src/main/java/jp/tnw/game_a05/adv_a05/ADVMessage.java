@@ -16,24 +16,23 @@ public class ADVMessage {
     final int moji_MAX = 32;
     public Bitmap FRAME, DARK;
     private int OK_flag;
-    private int finished = 0;
-    int cnt = 0;
-    int ctr=0;
-    int G_ctr=0;
-    double timer = 0, timeout = 0;
+    public boolean wait=false;
 
+    int ctr = 0;
+    int G_ctr = 0;
 
+    int S_ctr;//文字を表示するカウンター
+    int GS_ctr;//行を表示する　0~3
+
+    int flag;//0:流す　1:止まる
 
     ADVMessage_Data data;
 
-    String[] Text1 = {"", "", "", ""};
-    String newString = "";
-    char[][] mj=new char[4][moji_MAX];
+    char[][] mj = new char[4][moji_MAX];
 
     ADVMessage(ADVMessage_Data MD) {
-        this.data=MD;
+        this.data = MD;
         mj_clear();
-        clear();
     }
 
     public void loadImage(Resources res) {
@@ -45,150 +44,57 @@ public class ADVMessage {
 
     }
 
-
-    public void mj_clear(){
-        for(int i=0;i<moji_MAX;i++){
-            mj[0][i]='　';
-            mj[1][i]='　';
-            mj[2][i]='　';
-            mj[3][i]='　';
+    public void mj_clear() {
+        for (int i = 0; i < moji_MAX; i++) {
+            mj[0][i] = '　';
+            mj[1][i] = '　';
+            mj[2][i] = '　';
+            mj[3][i] = '　';
         }
     }
 
-
-    public void clear() {
-        Text1[0] = "";
-        Text1[1] = "";
-        Text1[2] = "";
-        Text1[3] = "";
-        cnt = 0;
-        finished = 0;
-    }
-
-    public void newText(String newText) {
-        if (newString.equals(newText)) {
-
-        } else {
-            if (cnt <= 3) {
-                //Text1[cnt] = newText;
-                newString = newText;
-                timer = 0;
-                finished = 0;
-                //cnt++;
-            } else {
-                Text1[0] = Text1[1];
-                Text1[1] = Text1[2];
-                Text1[2] = Text1[3];
-                Text1[3] = "";
-                timer = 0;
-                finished = 0;
-                newString = newText;
+    public void SP_code(char MD2) {
+        switch (MD2) {
+            case 'E': {
+                ctr = 0;
+                G_ctr = 0;
+                GS_ctr=0;
+                flag=1;
+                break;
             }
-        }
-    }
-
-    public void SP_code(char MD2){
-        switch(MD2){
-            case 'D':{
-                ctr=0;
+            case 'D': {
+                ctr = 0;
+                S_ctr = 0;
                 G_ctr++;
-                mj_clear();
-                break;
-            }
-            case 'E':{
-                G_ctr=0;
-                ctr=0;
-                mj_clear();
+                GS_ctr++;
+                if (GS_ctr > 3) {
+                    /*for (int i = 0; i < moji_MAX; i++) {
+                        mj[0][i] = mj[1][i];
+                        mj[1][i] = mj[2][i];
+                        mj[2][i] = mj[3][i];
+                        mj[3][i] = '　';
+                    }*/
+                    GS_ctr = 0;
+                    flag=1;
+                }
                 break;
             }
         }
-
     }
 
-    public void update2(){
+    public void update2() {
 
-        char MD=data.Bun_01[G_ctr].charAt(ctr);
-        char MD2=data.Bun_01[G_ctr].charAt(ctr+1);
+        if(flag==1) return;//表示が止まる
 
-        if(MD=='@' && (MD2>='A' && MD2<='Z')){
+        char MD = data.Bun_01[G_ctr].charAt(ctr);
+        char MD2 = data.Bun_01[G_ctr].charAt(ctr + 1);
 
+        if (MD == '@' && (MD2 >= 'A' && MD2 <= 'Z')) {
             SP_code(MD2);
-
-
-        }else{
-            mj[0][ctr]=data.Bun_01[G_ctr].charAt(ctr);
+        } else {
+            mj[GS_ctr][S_ctr] = data.Bun_01[G_ctr].charAt(ctr);
             ctr++;
-        }
-    }
-
-    public boolean update() {
-        if (cnt <= 3) {
-            if (Text1[cnt].length() == newString.length()) {
-                return false;
-            }
-        } else {
-            if (Text1[3].length() == newString.length()) {
-                return false;
-            }
-        }
-
-
-        if (newString.equals("")) {
-            return false;
-        }
-
-        if (cnt <= 3) {
-            if (timer + FrameTime * 33 <= newString.length() + 1) {
-                if ((int) timer + 1 <= (timer += FrameTime * 33)) {
-                    Text1[cnt] += newString.charAt((int) timer - 1);
-                }
-                if (Text1[cnt].length() == newString.length() && finished == 0) {
-                    cnt++;
-                    finished = 1;
-                }
-                //timer+=FrameTime;
-                return true;
-            }
-
-        } else {
-            if (Text1[3].length() == newString.length()) {
-                return false;
-            } else {
-                if (timer + FrameTime * 33 <= newString.length() + 1) {
-                    if ((int) timer + 1 <= (timer += FrameTime * 33)) {
-                        Text1[3] += newString.charAt((int) timer - 1);
-                    }
-                    //timer+=FrameTime;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-    public void drawImage(Canvas c, double Xx, double Yy) {
-
-        Paint p = new Paint();
-
-        if (Xx != 0 && OK_flag == 0) {//拡大縮小は1回だけ
-
-            OK_flag = 1;
-            FRAME = Bitmap.createScaledBitmap(FRAME, (int) (Xx * 960), (int) (Yy * 175), true);//BG
-            DARK = Bitmap.createScaledBitmap(DARK, (int) (Xx * 960), (int) (Yy * 175), true);//BG
-
-        }
-        if (OK_flag == 1) {//拡大準備が終わったら表示!!
-
-            c.drawBitmap(DARK, 0, (int) ((540 - 175) * Xx), p);
-            c.drawBitmap(FRAME, 0, (int) ((540 - 175) * Yy), p);
-
-            p.setTextSize(32 * (float) Xx);
-            p.setColor(Color.WHITE);
-            c.drawText(Text1[0], (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50) * Yy), p);
-            c.drawText(Text1[1], (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 1) * Yy), p);
-            c.drawText(Text1[2], (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 2) * Yy), p);
-            c.drawText(Text1[3], (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 3) * Yy), p);
+            S_ctr++;
         }
     }
 
@@ -199,22 +105,22 @@ public class ADVMessage {
         if (Xx != 0 && OK_flag == 0) {//拡大縮小は1回だけ
 
             OK_flag = 1;
-            FRAME = Bitmap.createScaledBitmap(FRAME, (int) (Xx * 960), (int) (Yy * 175), true);//BG
             DARK = Bitmap.createScaledBitmap(DARK, (int) (Xx * 960), (int) (Yy * 175), true);//BG
+            FRAME = Bitmap.createScaledBitmap(FRAME, (int) (Xx * 960), (int) (Yy * 175), true);//BG
 
         }
         if (OK_flag == 1) {//拡大準備が終わったら表示!!
-
+            p.setAlpha(128);//アルファ値　0～２５５
             c.drawBitmap(DARK, 0, (int) ((540 - 175) * Xx), p);
+            p.setAlpha(255);
             c.drawBitmap(FRAME, 0, (int) ((540 - 175) * Yy), p);
-
-            p.setTextSize(32 * (float) Xx);
-            p.setColor(Color.WHITE);
-            c.drawText(String.valueOf(mj[0]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50) * Yy), p);
-            c.drawText(String.valueOf(mj[1]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 1) * Yy), p);
-            c.drawText(String.valueOf(mj[2]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 2) * Yy), p);
-            c.drawText(String.valueOf(mj[3]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 3) * Yy), p);
         }
+        p.setTextSize(32 * (float) Xx);
+        p.setColor(Color.WHITE);
+        c.drawText(String.valueOf(mj[0]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50) * Yy), p);
+        c.drawText(String.valueOf(mj[1]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 1) * Yy), p);
+        c.drawText(String.valueOf(mj[2]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 2) * Yy), p);
+        c.drawText(String.valueOf(mj[3]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 3) * Yy), p);
     }
 
 }//class end

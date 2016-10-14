@@ -10,16 +10,19 @@ import android.graphics.Rect;
 /**
  * Created by game01 on 2016/09/16.
  */
-public class Enter {
+public class Cursor {
 
     private final double FrameTime = 1.0 / 60.0;        //fps=1/60[sec]
     public Bitmap PNG;
     int OK_flag;
     double No = 0;
+    int X,Y;
+    int flag;
 
 
-    Enter() {
-
+    Cursor() {
+        X = 960 - 50; //where on screen
+        Y = 540 - 50;
     }
 
     public void loadImage(Resources res) {
@@ -29,8 +32,10 @@ public class Enter {
     }
 
     public void drawImage(Canvas c, double screenWidth, double screenHeight, double Xx, double Yy) {
-        Paint p = new Paint();
 
+        //if(flag==0)return;
+
+        Paint p = new Paint();
         if (Xx != 0 && OK_flag == 0) {//拡大縮小は1回だけ
 
             OK_flag = 1;
@@ -46,10 +51,10 @@ public class Enter {
             int x2 = (int) ((32 * (int) No + 32) * Xx); //X and Y + size of image to cut
             int y2 = (int) ((0 + 32) * Yy);
 
-            int Sx1 = (int) ((960 - 64) * Xx); //where on screen
-            int Sy1 = (int) ((540 - 64) * Yy);
-            int Sx2 = (int) ((960 - 64 + 32) * Xx); //what size (from previous position)
-            int Sy2 = (int) ((540 - 64 + 32) * Yy);
+            int Sx1 = (int) ((X) * Xx); //where on screen
+            int Sy1 = (int) ((Y) * Yy);
+            int Sx2 = (int) ((X + 32) * Xx); //what size (from previous position)
+            int Sy2 = (int) ((Y + 32) * Yy);
 
             c.drawBitmap(PNG,
                     new Rect(x1, y1, x2, y2),            //cut from spritesheet!!!
