@@ -120,7 +120,7 @@ public class ADVMessage {
         c.drawText(String.valueOf(mj[0]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50) * Yy), p);
         c.drawText(String.valueOf(mj[1]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 1) * Yy), p);
         c.drawText(String.valueOf(mj[2]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 2) * Yy), p);
-        c.drawText(String.valueOf(mj[3]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 3) * Yy), p);
+        c.drawText(String.valueOf(mj[3]), (int) ((32 * 1) * Xx), (int) ((540 - 175 + 50 + 32 * 3) * Yy), p);//
     }
 
 }//class end
