@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import java.util.StringTokenizer;
+
 /**
  * 文字処理
  */
@@ -17,6 +19,8 @@ public class ADVMessage {
     public Bitmap FRAME, DARK;
     private int OK_flag;
     public boolean wait=false;
+    ADVBackground BG;
+    ADVCharacter CG;
 
     int ctr = 0;
     int G_ctr = 0;
@@ -30,8 +34,10 @@ public class ADVMessage {
 
     char[][] mj = new char[4][moji_MAX];
 
-    ADVMessage(ADVMessage_Data MD) {
+    ADVMessage(ADVMessage_Data MD, ADVBackground BG, ADVCharacter CG) {
         this.data = MD;
+        this.BG = BG;
+        this.CG = CG;
         mj_clear();
     }
 
@@ -79,6 +85,56 @@ public class ADVMessage {
                 }
                 break;
             }
+            case 'B':
+                char MD3 = data.Bun_01[G_ctr].charAt(ctr+2);
+                char MD4 = data.Bun_01[G_ctr].charAt(ctr+3);
+                //turn to int
+                int MD5 = Integer.parseInt(String.valueOf(MD3)+String.valueOf(MD4));
+                //int MD6 = Integer.parseInt();
+                //BG.BG_sel=MD5*10+MD6; ////
+                BG.BG_sel=MD5;
+                ctr+=4;// skip @B and two numbers = 4 chars
+                break;
+            case 'C':
+                char MD6 = data.Bun_01[G_ctr].charAt(ctr+2);
+                char MD7 = data.Bun_01[G_ctr].charAt(ctr+3);
+                char MD8 = data.Bun_01[G_ctr].charAt(ctr+4);
+                char MD9 = data.Bun_01[G_ctr].charAt(ctr+5);
+                //turn to int
+                int MD10 = Integer.parseInt(String.valueOf(MD6)+String.valueOf(MD7));
+                //int MD6 = Integer.parseInt();
+                //BG.BG_sel=MD5*10+MD6; ////
+                switch(MD9) {
+                    case 'L':
+                        CG.CGL=MD10;
+                        if(MD8=='L')
+                            CG.NoL=0;
+                        else if(MD8=='R')
+                            CG.NoR=1;
+                        else if(MD8=='C')
+                            CG.NoC=2;
+                        break;
+                    case 'C':
+                        CG.CGC=MD10;
+                        if(MD8=='L')
+                            CG.NoL=0;
+                        else if(MD8=='R')
+                            CG.NoR=1;
+                        else if(MD8=='C')
+                            CG.NoC=2;
+                        break;
+                    case 'R':
+                        CG.CGR=MD10;
+                        if(MD8=='L')
+                            CG.NoL=0;
+                        else if(MD8=='R')
+                            CG.NoR=1;
+                        else if(MD8=='C')
+                            CG.NoC=2;
+                        break;
+                }
+                ctr+=6;// skip @B and two numbers = 4 chars
+                break;
         }
     }
 

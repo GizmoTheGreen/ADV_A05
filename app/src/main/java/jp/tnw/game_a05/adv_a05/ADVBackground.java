@@ -11,9 +11,11 @@ import android.graphics.Paint;
  */
 public class ADVBackground {
 
+    final double FrameTime = 1.0 / 60.0;
     public Bitmap[] BG_PNG=new Bitmap[13];
     int OK_flag[] = new int[13];
     int BG_sel=0;
+    double timer=5;
 
     ADVBackground() {
 
@@ -61,6 +63,11 @@ public class ADVBackground {
     }
 
     public void update() {
-
+    timer-=FrameTime;
+        if(timer<=0){
+            timer=1;
+            BG_sel++;
+            if(BG_sel>12){BG_sel=1;}
+        }
     }
 }//class end

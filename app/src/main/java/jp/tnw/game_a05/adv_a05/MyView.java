@@ -35,7 +35,8 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
 
     //◆インスタンス実体化
     ADVBackground BG = new ADVBackground();
-    ADVMessage Message = new ADVMessage(new ADVMessage_Data());
+    ADVCharacter  CG = new ADVCharacter();
+    ADVMessage Message = new ADVMessage(new ADVMessage_Data(), BG, CG);
     Cursor Arrow = new Cursor();
 
     //---------------------------
@@ -54,6 +55,7 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
         //  G_PNG= BitmapFactory.decodeResource(res, R.drawable.waku,opt);//BG
         BG.loadImage(res);
         Message.loadImage(res);
+        CG.loadImage(res);
         Arrow.loadImage(res);
         //My=100;
         //Mx=0;
@@ -68,6 +70,7 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
             //My += FrameTime * 100;
             //Message.newText(Message.data.Bun_01[cnt]);
             //busy = Message.update();
+            //BG.update();
             Message.update2();
             Arrow.update();
         }
@@ -112,7 +115,7 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback, Runna
             p.setColor(Color.RED);
 
             BG.drawImage(c, Xx, Yy);
-
+            CG.drawImage(c, Xx, Yy);
 
 
             int touchOld = touchEvent;
