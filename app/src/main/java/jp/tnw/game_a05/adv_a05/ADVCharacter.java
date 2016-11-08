@@ -14,7 +14,7 @@ public class ADVCharacter {
 
     final double FrameTime = 1.0 / 60.0;
     public Bitmap[] CHAR_PNG=new Bitmap[11];
-    int OK_flag[] = new int[11];
+    int OK_flag[] = {0,0,0,0,0,0,0,0,0,0,0};
     int CGL=0,CGC=0,CGR=0;
     int NoL=0, NoC=0, NoR=0;
     double timer=5;
@@ -30,7 +30,7 @@ public class ADVCharacter {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();//ﾌﾗｸﾞを新規で作成
         opt.inScaled = false;//ﾉｰﾏﾙで読み込むために
-        CHAR_PNG[0] = BitmapFactory.decodeResource(res, R.drawable.ch01, opt);//実際のファイル読み込み
+        CHAR_PNG[0] = BitmapFactory.decodeResource(res, R.drawable.ch00, opt);//実際のファイル読み込み
         CHAR_PNG[1] = BitmapFactory.decodeResource(res, R.drawable.ch01, opt);
         CHAR_PNG[2] = BitmapFactory.decodeResource(res, R.drawable.ch02, opt);
         CHAR_PNG[3] = BitmapFactory.decodeResource(res, R.drawable.ch03, opt);

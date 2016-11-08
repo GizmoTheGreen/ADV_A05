@@ -110,27 +110,27 @@ public class ADVMessage {
                         if(MD8=='L')
                             CG.NoL=0;
                         else if(MD8=='R')
-                            CG.NoR=1;
+                            CG.NoL=1;
                         else if(MD8=='C')
-                            CG.NoC=2;
+                            CG.NoL=2;
                         break;
                     case 'C':
                         CG.CGC=MD10;
                         if(MD8=='L')
-                            CG.NoL=0;
+                            CG.NoC=0;
                         else if(MD8=='R')
-                            CG.NoR=1;
+                            CG.NoC=1;
                         else if(MD8=='C')
                             CG.NoC=2;
                         break;
                     case 'R':
                         CG.CGR=MD10;
                         if(MD8=='L')
-                            CG.NoL=0;
+                            CG.NoR=0;
                         else if(MD8=='R')
                             CG.NoR=1;
                         else if(MD8=='C')
-                            CG.NoC=2;
+                            CG.NoR=2;
                         break;
                 }
                 ctr+=6;// skip @B and two numbers = 4 chars
